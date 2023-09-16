@@ -3,8 +3,8 @@ env = require('dotenv').config().parsed;
 const express = require('express');
 const { Server } = require('socket.io');
 const http = require('http');
-const server = http.createServer();
 const app = express();
+const server = http.createServer(app);
 
 //* Routers
 const googleRouter = require('./routes/google');
@@ -15,14 +15,21 @@ const { speech_to_text } = require('./lib/deepgram/speech_api');
 const { text_to_speech } = require('./lib/google/speech_api');
 const { chat } = require('./lib/openai/chat');
 
-const HOST = '192.168.0.108';
-const PORT = 3000;
+const PORT = process.evn.port || 3000;
 
 const io = new Server(server, {
   cors: {
     origin: '*',
   },
 });
+
+app.get('/', function (req, res) {
+  res.send('welcome');
+});
+
+app.use('/google', googleRouter);
+app.use('/amazon', amazonRouter);
+app.use('/deepgram', deepgramRouter);
 
 const ws = io.of('/socket');
 
@@ -47,14 +54,6 @@ ws.on('connection', (socket) => {
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', function (req, res) {
-  res.send('welcome');
-});
-
-app.use('/google', googleRouter);
-app.use('/amazon', amazonRouter);
-app.use('/deepgram', deepgramRouter);
-
-server.listen(PORT, HOST, () => {
-  console.log(`Server is listening on http://${HOST}:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
