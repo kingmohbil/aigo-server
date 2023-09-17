@@ -15,7 +15,7 @@ const { speech_to_text } = require('./lib/deepgram/speech_api');
 const { text_to_speech } = require('./lib/google/speech_api');
 const { chat } = require('./lib/openai/chat');
 
-const PORT = process.evn.port || 3000;
+const PORT = process.env.port || 3000;
 
 const io = new Server(server, {
   cors: {
