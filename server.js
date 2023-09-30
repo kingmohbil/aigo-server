@@ -23,15 +23,7 @@ const io = new Server(server, {
   },
 });
 
-app.get('/', function (req, res) {
-  res.send('welcome');
-});
-
-app.use('/google', googleRouter);
-app.use('/amazon', amazonRouter);
-app.use('/deepgram', deepgramRouter);
-
-const ws = io.of('/socket');
+const ws = io.of('/');
 
 ws.on('connection', (socket) => {
   console.log(`Socket with id: ${socket.id} connected`);
@@ -54,6 +46,6 @@ ws.on('connection', (socket) => {
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-server.listen(PORT, () => {
+server.listen(PORT, '192.168.0.104', () => {
   console.log(`Server is listening on port ${PORT}`);
 });
