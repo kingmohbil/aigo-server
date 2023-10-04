@@ -42,7 +42,7 @@ ws.on('connection', (socket) => {
         console.log(`Answer: ${answer}`);
 
         const speech = await text_to_speech(answer, lang.text);
-        ws.to(socket.id).emit('test-text', speech, answer);
+        ws.to(socket.id).emit('text', speech, answer);
       } catch (error) {
         console.log(`Error: ${error}`);
       }
